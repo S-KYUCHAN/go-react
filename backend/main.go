@@ -20,6 +20,8 @@ var Articles []Article
 
 func returnAllArticles(w http.ResponseWriter, r *http.Request) {
 	fmt.Println("Endpoint Hit: returnAllArticles")
+	w.Header().Set("Access-Control-Allow-Origin", "*")
+
 	json.NewEncoder(w).Encode(Articles)
 }
 
@@ -46,16 +48,16 @@ func createNewArticle(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(article)
 }
 
-func updateArticle(w http.ResponseWriter, r *http.Request) {
-	vars := mux.Vars(r)
-	id := vars["id"]
+// func updateArticle(w http.ResponseWriter, r *http.Request) {
+// 	vars := mux.Vars(r)
+// 	id := vars["id"]
 
-	for index, article := range Articles {
-		if article.Id == id {
-			fmt.Fprintf(w, "This article!!")
-		}
-	}
-}
+// 	for index, article := range Articles {
+// 		if article.Id == id {
+// 			fmt.Fprintf(w, "This article!!")
+// 		}
+// 	}
+// }
 
 func deleteArticle(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
@@ -73,14 +75,31 @@ func welcomePage(w http.ResponseWriter, h *http.Request) {
 	fmt.Println("Endpoint Hit: welcomePage")
 }
 
+func CORS(next http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Access-Control-Allow-Headers:", "*")
+		w.Header().Set("Access-Control-Allow-Origin:", "*")
+		w.Header().Set("Content-Type", "application/json")
+		w.Header().Set("Access-Control-Allow-Methods:", "*")
+		
+		if r.Method == "OPTIONS" {
+			w.WriteHeader(http.StatusOK)
+			return
+		}
+		next.ServeHTTP(w, r)
+		return
+	})
+}
+
 func handleRequests() {
 
 	myRouter := mux.NewRouter().StrictSlash(true)
+	myRouter.Use(CORS)
 
 	myRouter.HandleFunc("/", welcomePage)
 	myRouter.HandleFunc("/articles", returnAllArticles)
 	myRouter.HandleFunc("/article", createNewArticle).Methods("POST")
-	myRouter.HandleFunc("/article/{id}", updateArticle).Methods("PUT")
+	// myRouter.HandleFunc("/article/{id}", updateArticle).Methods("PUT")
 	myRouter.HandleFunc("/article/{id}", deleteArticle).Methods("DELETE")
 	myRouter.HandleFunc("/article/{id}", returnSingleArticles)
 	log.Fatal(http.ListenAndServe(":10000", myRouter))
