@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import {
   useParams,
 } from "react-router-dom";
@@ -7,19 +7,18 @@ import axios from "axios";
 import "./Detail.scss";
 
 const DetailView = (props) => {
-  const { repos } = props;
-  if (!repos || repos.length === 0) return <p>No repos</p>;
+  const { articles } = props;
+  if (!articles || articles.length === 0) return <p>No articles</p>;
   return (
     <ul>
-      <h2 className="list-head">List!!</h2>
-      {repos.map((repo, index) => {
+      {articles.map((article, index) => {
         return (
-          <div key={`containerKey ${index}`}>
-            <li key={`listKey ${index}`} className='list' >
-              <div key={`listTitle ${index}`} className="list-title">{repo.title}</div>
-              <div key={`listDesc ${index}`} className="list-desc">{repo.desc}</div>
-              <div key={`listCont ${index}`} className="list-cont">{repo.content}</div>
-            </li>
+          <div key={`containerKey ${index}`} className="detail-container">
+            <h2 className="detail-head">{article.Title}</h2>
+            <div key={`detailKey ${index}`} className='detail' >
+              <div key={`detailDesc ${index}`} className="detail-desc">{article.desc}</div>
+              <div key={`detailCont ${index}`} className="detail-cont">{article.content}</div>
+            </div>
           </div>
         );
       })}
@@ -33,21 +32,26 @@ export default function Detail() {
   const ListLoading = withListLoading(DetailView);
   const [detailState, setDetailState] = useState({
     loading: false,
-    repos: null,
+    articles: null,
   });
+
+  const fetchApi = useCallback(async () => {
+    const apiUrl = `/article/${id}`;
+    axios.get(apiUrl).then((articles) => {
+      const allArticle = articles.data;
+      setDetailState({ loading: false, articles: allArticle });
+    }).catch((err) => console.log(err));
+  }, [id]);
 
   useEffect(() => {
     setDetailState({ loading: true });
-    const apiUrl = `/article/${id}`;
-    axios.get(apiUrl).then((repos) => {
-      const allRepos = repos.data;
-      setDetailState({ loading: false, repos: allRepos });
-    }).catch((err) => console.log(err));
-  }, [setDetailState]);
+    fetchApi();
+  }, [setDetailState, fetchApi]);
 
   return (
     <div className='Container'>
-      <ListLoading isLoading={detailState.loading} repos={detailState.repos} />
+      <ListLoading isLoading={detailState.loading} articles={detailState.articles} />
+      <button onClick={fetchApi}>Reset</button>
     </div>
   )
 }

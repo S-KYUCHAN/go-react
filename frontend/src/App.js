@@ -2,7 +2,7 @@ import React from "react";
 import {
   BrowserRouter as Router,
   Route,
-  Redirect,
+  // Redirect,
 } from "react-router-dom";
 import List from "./Routes/List/List";
 import Detail from "./Routes/Detail/Detail";
@@ -14,7 +14,7 @@ function App() {
       <Header />
       <Route exact path="/articles" component={List} />
       <Route path="/article/:id" component={Detail} />
-      <Redirect exact path="/" to="/articles" />
+      {/* <Redirect exact path="/" to="/articles" /> */}
     </Router>
   )
 }

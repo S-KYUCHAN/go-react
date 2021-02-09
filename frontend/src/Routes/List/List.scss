@@ -1,20 +1,34 @@
-.list-heade {
+.list-head {
   background-color: white;
   width: 100%;
   margin: 0;
   padding-top: 10px;
-
-  list-title {
-    width: 15%;
-    margin: 5px;
-    padding: 5px;
-    float: left;
-  }
-
-  list-desc {
-    width: 30%;
-    margin: 5px;
-    padding: 5px;
-    float: left;
-  }
 }
+
+.list-container {
+  box-sizing: content-box;
+  border-style: solid;
+  width: 90%;
+  height: 50px;
+  display: center;
+}
+
+.list-title {
+  width: 20%;
+  float: left;
+  text-align: center;
+}
+
+.list-desc {
+  width: 30%;
+  float: left;
+  text-align: center;
+}
+
+.list-cont {
+  width: 50%;
+  float: right;
+  text-align: center;
+}
+
+

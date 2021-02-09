@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import {
   Link,
   // useRouteMatch,
@@ -16,12 +16,12 @@ const ListView = (props) => {
       <h2 className="list-head">List!!</h2>
       {repos.map((repo, index) => {
         return (
-          <div key={`containerKey ${index}`}>
-            <li key={`listKey ${index}`} className='list' >
-              <Link to={`article/${repo.Id}`}>{repo.Title}</Link>
+          <div key={`containerKey ${index}`} className="list-container">
+            <div key={`listKey ${index}`} className='list' >
+              <Link to={`article/${repo.Id}`} className="list-title">{repo.Title}</Link>
               <div key={`listDesc ${index}`} className="list-desc">{repo.desc}</div>
               <div key={`listCont ${index}`} className="list-cont">{repo.content}</div>
-            </li>
+            </div>
           </div>
         );
       })}
@@ -36,18 +36,23 @@ export default function List() {
     repos: null,
   });
 
-  useEffect(() => {
-    setListState({ loading: true });
+  const fetchApi = useCallback(async () => {
     const apiUrl = '/articles/';
     axios.get(apiUrl).then((repos) => {
       const allRepos = repos.data;
       setListState({ loading: false, repos: allRepos });
     }).catch((err) => console.log(err));
-  }, [setListState]);
+  }, [])
+
+  useEffect(() => {
+    setListState({ loading: true });
+    fetchApi();
+  }, [setListState, fetchApi]);
 
   return (
     <div className='Container'>
       <ListLoading isLoading={listState.loading} repos={listState.repos} />
+      <button onClick={fetchApi}>Reset</button>
     </div>
   )
 }

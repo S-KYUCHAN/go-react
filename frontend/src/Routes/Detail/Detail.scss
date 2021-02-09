@@ -1,0 +1,33 @@
+
+
+.detail-container {
+  box-sizing: content-box;
+  border-style: solid;
+  width: 100%;
+}
+
+.detail-head {
+  box-sizing: content-box;
+  border-style: solid;
+  text-align: center;
+  font-size: 1.5rem;
+  margin: 5px;
+}
+
+.detail-desc {
+  box-sizing: content-box;
+  border-style: solid;
+  text-align: left;
+  margin: 5px;
+  padding: 5px;
+  height: 40px;
+}
+
+.detail-cont {
+  box-sizing: content-box;
+  border-style: solid;
+  text-align: left;
+  margin: 5px;
+  padding: 5px;
+  height: 100px;
+}
