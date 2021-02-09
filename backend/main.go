@@ -7,6 +7,7 @@ import (
 	"encoding/json"
 	"github.com/gorilla/mux"
 	"io/ioutil"
+	"github.com/S-KYUCHAN/backend/db"
 )
 
 type Article struct {
@@ -16,26 +17,39 @@ type Article struct {
 	Content string `json:"content"`
 }
 
-var Articles []Article
-
 func returnAllArticles(w http.ResponseWriter, r *http.Request) {
-	fmt.Println("Endpoint Hit: returnAllArticles")
-	w.Header().Set("Access-Control-Allow-Origin", "*")
+	var Articles []Article
+	var query string = "select * from article_db"
 
+	rows := db.DbQuery(query)
+	for rows.Next() {
+		var article Article
+		rows.Scan(&article.Id, &article.Title, &article.Desc, &article.Content)
+		Articles = append(Articles, article)
+	}
+	
 	json.NewEncoder(w).Encode(Articles)
+	
+	fmt.Println("Endpoint Hit: returnAllArticles")
 }
 
 func returnSingleArticles(w http.ResponseWriter, r *http.Request) {
+	var Articles []Article
 	vars := mux.Vars(r)
 	key := vars["id"]
-
-	fmt.Fprintf(w, "Key: " + key)
-
-	for _, article := range Articles {
-		if article.Id == key {
-			json.NewEncoder(w).Encode(article)
-		}
+	
+	query := fmt.Sprintf("select * from article_db where `id`=%s", key)
+	
+	rows := db.DbQuery(query)
+	for rows.Next() {
+		var article Article
+		rows.Scan(&article.Id, &article.Title, &article.Desc, &article.Content)
+		Articles = append(Articles, article)
 	}
+	
+	json.NewEncoder(w).Encode(Articles)
+	
+	fmt.Println("Endpoint Hit: returnSingleArticles")
 }
 
 func createNewArticle(w http.ResponseWriter, r *http.Request) {
@@ -43,7 +57,7 @@ func createNewArticle(w http.ResponseWriter, r *http.Request) {
 
 	var article Article
 	json.Unmarshal(reqBody, &article)
-	Articles = append(Articles, article)
+	// Articles = append(Articles, article)
 
 	json.NewEncoder(w).Encode(article)
 }
@@ -60,14 +74,14 @@ func createNewArticle(w http.ResponseWriter, r *http.Request) {
 // }
 
 func deleteArticle(w http.ResponseWriter, r *http.Request) {
-	vars := mux.Vars(r)
-	id := vars["id"]
+	// vars := mux.Vars(r)
+	// id := vars["id"]
 
-	for index, article := range Articles {
-		if article.Id == id {
-			Articles = append(Articles[:index], Articles[index+1:]...)
-		}
-	}
+	// for index, article := range Articles {
+	// 	if article.Id == id {
+	// 		Articles = append(Articles[:index], Articles[index+1:]...)
+	// 	}
+	// }
 }
 
 func welcomePage(w http.ResponseWriter, h *http.Request) {
@@ -102,13 +116,11 @@ func handleRequests() {
 	// myRouter.HandleFunc("/article/{id}", updateArticle).Methods("PUT")
 	myRouter.HandleFunc("/article/{id}", deleteArticle).Methods("DELETE")
 	myRouter.HandleFunc("/article/{id}", returnSingleArticles)
+	fmt.Println("Listening")
 	log.Fatal(http.ListenAndServe(":10000", myRouter))
 }
 
 func main() {
-	Articles = []Article {
-		Article{Id: "1", Title: "Hello", Desc: "Article Description", Content: "Article Content"},
-		Article{Id: "2", Title: "Hello2", Desc: "Article Description", Content: "Article Content"},
-	}
+
 	handleRequests()
 }
