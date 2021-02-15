@@ -6,9 +6,25 @@ import withListLoading from "../../Components/WithListLoading";
 import axios from "axios";
 import "./Detail.scss";
 
-const DetailView = (props) => {
-  const { articles } = props;
-  if (!articles || articles.length === 0) return <p>No articles</p>;
+interface Detail {
+  Id: string;
+  Title: string;
+  desc: string;
+  content: string;
+}
+
+interface IState {
+  isLoading: boolean;
+  articles?: Array<Detail> | null;
+}
+
+interface ParamTypes {
+  id: string
+}
+
+const DetailView = (props: IState) => {
+  const articles = props.articles;
+  if (!articles || articles?.length === 0) return <p>No article</p>;
   return (
     <ul>
       {articles.map((article, index) => {
@@ -27,30 +43,31 @@ const DetailView = (props) => {
 };
 
 export default function Detail() {
-  let { id } = useParams();
+  let { id } = useParams<ParamTypes>();
 
   const ListLoading = withListLoading(DetailView);
-  const [detailState, setDetailState] = useState({
-    loading: false,
+  const [detailState, setDetailState] = useState<IState>({
+    isLoading: false,
     articles: null,
   });
 
   const fetchApi = useCallback(async () => {
     const apiUrl = `/article/${id}`;
-    axios.get(apiUrl).then((articles) => {
-      const allArticle = articles.data;
-      setDetailState({ loading: false, articles: allArticle });
+    axios.get<Array<Detail>>(apiUrl).then(response => {
+      const allArticle = response.data;
+      console.log(allArticle)
+      setDetailState({ isLoading: false, articles: allArticle });
     }).catch((err) => console.log(err));
   }, [id]);
 
   useEffect(() => {
-    setDetailState({ loading: true });
+    setDetailState({ isLoading: true });
     fetchApi();
   }, [setDetailState, fetchApi]);
 
   return (
     <div className='Container'>
-      <ListLoading isLoading={detailState.loading} articles={detailState.articles} />
+      <ListLoading isLoading={detailState.isLoading} articles={detailState.articles} />
       <button onClick={fetchApi}>Reset</button>
     </div>
   )

@@ -7,10 +7,22 @@ import withListLoading from "../../Components/WithListLoading";
 import axios from "axios";
 import "./List.scss";
 
-const ListView = (props) => {
+interface List {
+  Id: string;
+  Title: string;
+  desc: string;
+  content: string;
+}
+
+interface IState {
+  isLoading: boolean;
+  repos?: Array<List> | null;
+}
+
+function ListView(props: IState) {
   // let { url } = useRouteMatch();
-  const { repos } = props;
-  if (!repos || repos.length === 0) return <p>No repos</p>;
+  const repos = props.repos;
+  if (!repos || repos?.length === 0) return <p>No data</p>;
   return (
     <ul>
       <h2 className="list-head">List!!</h2>
@@ -31,27 +43,26 @@ const ListView = (props) => {
 
 export default function List() {
   const ListLoading = withListLoading(ListView);
-  const [listState, setListState] = useState({
-    loading: false,
+  const [listState, setListState] = useState<IState>({
+    isLoading: false,
     repos: null,
   });
 
   const fetchApi = useCallback(async () => {
     const apiUrl = '/articles/';
-    axios.get(apiUrl).then((repos) => {
-      const allRepos = repos.data;
-      setListState({ loading: false, repos: allRepos });
+    axios.get<Array<List>>(apiUrl).then(response => {
+      setListState({ isLoading: false, repos: response.data });
     }).catch((err) => console.log(err));
   }, [])
 
   useEffect(() => {
-    setListState({ loading: true });
+    setListState({ isLoading: true, repos: null });
     fetchApi();
   }, [setListState, fetchApi]);
 
   return (
     <div className='Container'>
-      <ListLoading isLoading={listState.loading} repos={listState.repos} />
+      <ListLoading isLoading={listState.isLoading} repos={listState.repos} />
       <button onClick={fetchApi}>Reset</button>
     </div>
   )
