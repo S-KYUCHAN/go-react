@@ -5,7 +5,7 @@ import {
 } from "react-router-dom";
 import withListLoading from "../../Components/WithListLoading";
 import axios from "axios";
-import "./List.scss";
+// import "./List.scss";
 
 interface List {
   Id: string;

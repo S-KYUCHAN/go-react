@@ -4,7 +4,7 @@ import {
 } from "react-router-dom";
 import withListLoading from "../../Components/WithListLoading";
 import axios from "axios";
-import "./Detail.scss";
+// import "./Detail.scss";
 
 interface Detail {
   Id: string;
@@ -55,7 +55,6 @@ export default function Detail() {
     const apiUrl = `/article/${id}`;
     axios.get<Array<Detail>>(apiUrl).then(response => {
       const allArticle = response.data;
-      console.log(allArticle)
       setDetailState({ isLoading: false, articles: allArticle });
     }).catch((err) => console.log(err));
   }, [id]);
