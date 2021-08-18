@@ -59,6 +59,11 @@ export default function Detail() {
     }).catch((err) => console.log(err));
   }, [id]);
 
+  const deleteApi = async () => {
+    const apiUrl = `/article/${id}`;
+    const res = await axios.delete(apiUrl).then(response => console.log(response));
+  }
+
   useEffect(() => {
     setDetailState({ isLoading: true });
     fetchApi();
@@ -68,6 +73,7 @@ export default function Detail() {
     <div className='Container'>
       <ListLoading isLoading={detailState.isLoading} articles={detailState.articles} />
       <button onClick={fetchApi}>Reset</button>
+      <button onClick={deleteApi}>Delete</button>
     </div>
   )
 }

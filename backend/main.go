@@ -28,7 +28,7 @@ func returnAllArticles(w http.ResponseWriter, r *http.Request) {
 		Articles = append(Articles, article)
 	}
 	
-	json.NewEncoder(w).Encode(Articles)
+	// json.NewEncoder(w).Encode(Articles)
 	
 	fmt.Println("Endpoint Hit: returnAllArticles")
 }
@@ -47,7 +47,7 @@ func returnSingleArticles(w http.ResponseWriter, r *http.Request) {
 		Articles = append(Articles, article)
 	}
 	
-	json.NewEncoder(w).Encode(Articles)
+	// json.NewEncoder(w).Encode(Articles)
 	
 	fmt.Println("Endpoint Hit: returnSingleArticles")
 }
@@ -63,9 +63,7 @@ func createNewArticle(w http.ResponseWriter, r *http.Request) {
 
 	result := db.DbExec(query)
 
-	fmt.Println(result)
-
-	json.NewEncoder(w).Encode(article)
+	// json.NewEncoder(w).Encode(article)
 	fmt.Println("Endpoint Hit: createNewArticle")
 }
 
