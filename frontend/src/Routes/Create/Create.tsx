@@ -1,15 +1,14 @@
 import axios from "axios";
 import React, { useState } from "react";
 
-interface Create {
+interface ICreate {
   Title: string;
   description: string;
   content: string;
 }
 
-
 export default function Create() {
-  const [createState, setCreateState] = useState<Create>({
+  const [createState, setCreateState] = useState<ICreate>({
     Title: "",
     description: "",
     content: ""
@@ -17,7 +16,7 @@ export default function Create() {
 
   const postApi = async () => {
     const apiUrl = `/article`;
-    const response = await axios.post(
+    await axios.post(
                       apiUrl, JSON.stringify(createState), {
                         headers:{
                           'Conetent-type': 'application/jason',

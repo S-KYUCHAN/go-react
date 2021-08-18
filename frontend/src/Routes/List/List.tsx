@@ -7,7 +7,7 @@ import withListLoading from "../../Components/WithListLoading";
 import axios from "axios";
 // import "./List.scss";
 
-interface List {
+interface IList {
   Id: string;
   Title: string;
   desc: string;
@@ -16,7 +16,7 @@ interface List {
 
 interface IState {
   isLoading: boolean;
-  repos?: Array<List> | null;
+  repos?: Array<IList> | null;
 }
 
 function ListView(props: IState) {
@@ -50,7 +50,7 @@ export default function List() {
 
   const fetchApi = useCallback(async () => {
     const apiUrl = '/articles/';
-    axios.get<Array<List>>(apiUrl).then(response => {
+    axios.get<Array<IList>>(apiUrl).then(response => {
       setListState({ isLoading: false, repos: response.data });
     }).catch((err) => console.log(err));
   }, [])

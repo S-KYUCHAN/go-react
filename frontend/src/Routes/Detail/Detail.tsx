@@ -6,7 +6,7 @@ import withListLoading from "../../Components/WithListLoading";
 import axios from "axios";
 // import "./Detail.scss";
 
-interface Detail {
+interface IDetail {
   Id: string;
   Title: string;
   desc: string;
@@ -15,7 +15,7 @@ interface Detail {
 
 interface IState {
   isLoading: boolean;
-  articles?: Array<Detail> | null;
+  articles?: Array<IDetail> | null;
 }
 
 interface ParamTypes {
@@ -53,7 +53,7 @@ export default function Detail() {
 
   const fetchApi = useCallback(async () => {
     const apiUrl = `/article/${id}`;
-    axios.get<Array<Detail>>(apiUrl).then(response => {
+    axios.get<Array<IDetail>>(apiUrl).then(response => {
       const allArticle = response.data;
       setDetailState({ isLoading: false, articles: allArticle });
     }).catch((err) => console.log(err));
@@ -61,7 +61,7 @@ export default function Detail() {
 
   const deleteApi = async () => {
     const apiUrl = `/article/${id}`;
-    const res = await axios.delete(apiUrl).then(response => console.log(response));
+    await axios.delete(apiUrl).then(response => console.log(response));
   }
 
   useEffect(() => {
