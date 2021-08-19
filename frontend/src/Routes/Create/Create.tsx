@@ -1,5 +1,6 @@
 import axios from "axios";
 import React, { useState } from "react";
+import { useHistory } from "react-router-dom";
 
 interface ICreate {
   Title: string;
@@ -14,6 +15,8 @@ export default function Create() {
     content: ""
   });
 
+  let history = useHistory();
+
   const postApi = async () => {
     const apiUrl = `/article`;
     await axios.post(
@@ -22,7 +25,10 @@ export default function Create() {
                           'Conetent-type': 'application/jason',
                           'Accept': 'application/json'
                         }
-                      }).then(response => console.log(response));
+                      }).then(response => {
+                        console.log(response);
+                        history.push("/articles");
+                      });
   }
 
   const handleChange = (event:React.ChangeEvent<HTMLInputElement>) => {

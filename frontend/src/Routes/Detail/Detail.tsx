@@ -1,5 +1,6 @@
 import React, { useEffect, useState, useCallback } from "react";
 import {
+  useHistory,
   useParams,
 } from "react-router-dom";
 import withListLoading from "../../Components/WithListLoading";
@@ -44,6 +45,7 @@ const DetailView = (props: IState) => {
 
 export default function Detail() {
   let { id } = useParams<ParamTypes>();
+  let history = useHistory();
 
   const ListLoading = withListLoading(DetailView);
   const [detailState, setDetailState] = useState<IState>({
@@ -61,7 +63,10 @@ export default function Detail() {
 
   const deleteApi = async () => {
     const apiUrl = `/article/${id}`;
-    await axios.delete(apiUrl).then(response => console.log(response));
+    await axios.delete(apiUrl).then(response => {
+      console.log(response);
+      history.push("/articles");
+    });
   }
 
   useEffect(() => {

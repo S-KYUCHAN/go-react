@@ -28,7 +28,7 @@ func returnAllArticles(w http.ResponseWriter, r *http.Request) {
 		Articles = append(Articles, article)
 	}
 	
-	// json.NewEncoder(w).Encode(Articles)
+	json.NewEncoder(w).Encode(Articles)
 	
 	fmt.Println("Endpoint Hit: returnAllArticles")
 }
@@ -47,7 +47,7 @@ func returnSingleArticles(w http.ResponseWriter, r *http.Request) {
 		Articles = append(Articles, article)
 	}
 	
-	// json.NewEncoder(w).Encode(Articles)
+	json.NewEncoder(w).Encode(Articles)
 	
 	fmt.Println("Endpoint Hit: returnSingleArticles")
 }
@@ -62,8 +62,8 @@ func createNewArticle(w http.ResponseWriter, r *http.Request) {
 												article.Title, article.Desc, article.Content)
 
 	result := db.DbExec(query)
-
-	// json.NewEncoder(w).Encode(article)
+	
+	fmt.Println(result)
 	fmt.Println("Endpoint Hit: createNewArticle")
 }
 
@@ -85,7 +85,7 @@ func deleteArticle(w http.ResponseWriter, r *http.Request) {
 	query := fmt.Sprintf("delete from article_db where `id`=%s", key)
 
 	result := db.DbExec(query)
-
+	
 	fmt.Println(result)
 }
 
