@@ -8,9 +8,9 @@ import axios from "axios";
 // import "./Detail.scss";
 
 interface IDetail {
-  Id: string;
-  Title: string;
-  desc: string;
+  id: string;
+  title: string;
+  description: string;
   content: string;
 }
 
@@ -31,9 +31,9 @@ const DetailView = (props: IState) => {
       {articles.map((article, index) => {
         return (
           <div key={`containerKey ${index}`} className="detail-container">
-            <h2 className="detail-head">{article.Title}</h2>
+            <h2 className="detail-head">{article.title}</h2>
             <div key={`detailKey ${index}`} className='detail' >
-              <div key={`detailDesc ${index}`} className="detail-desc">{article.desc}</div>
+              <div key={`detailDesc ${index}`} className="detail-desc">{article.description}</div>
               <div key={`detailCont ${index}`} className="detail-cont">{article.content}</div>
             </div>
           </div>

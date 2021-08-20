@@ -7,6 +7,7 @@ import (
 	"encoding/json"
 	"github.com/gorilla/mux"
 	"io/ioutil"
+
 	"github.com/S-KYUCHAN/backend/db"
 )
 
@@ -18,36 +19,64 @@ type Article struct {
 }
 
 func returnAllArticles(w http.ResponseWriter, r *http.Request) {
-	var Articles []Article
+
 	var query string = "select * from article_db"
 
 	rows := db.DbQuery(query)
+	col, _ := rows.Columns()
+	typeVal, _ := rows.ColumnTypes()
+
+	results := make([]map[string]interface{}, 0)
 	for rows.Next() {
-		var article Article
-		rows.Scan(&article.Id, &article.Title, &article.Desc, &article.Content)
-		Articles = append(Articles, article)
+		colVar := make([]interface{}, len(col))
+		for i := 0; i < len(col); i++ {
+			typeName := typeVal[i].DatabaseTypeName()
+			db.SetColVarType(&colVar, i, typeName)
+		}
+		
+		result := make(map[string]interface{})
+		rows.Scan(colVar...)
+		for i := 0; i < len(col); i++ {
+			typeName := typeVal[i].DatabaseTypeName()
+			db.SetResultValue(&result, col[i], colVar[i], typeName)
+		}
+
+		results = append(results, result)
 	}
 	
-	json.NewEncoder(w).Encode(Articles)
-	
+	json.NewEncoder(w).Encode(results)
 	fmt.Println("Endpoint Hit: returnAllArticles")
 }
 
 func returnSingleArticles(w http.ResponseWriter, r *http.Request) {
-	var Articles []Article
 	vars := mux.Vars(r)
 	key := vars["id"]
 	
 	query := fmt.Sprintf("select * from article_db where `id`=%s", key)
 	
 	rows := db.DbQuery(query)
+	col, _ := rows.Columns()
+	typeVal, _ := rows.ColumnTypes()
+
+	results := make([]map[string]interface{}, 0)
 	for rows.Next() {
-		var article Article
-		rows.Scan(&article.Id, &article.Title, &article.Desc, &article.Content)
-		Articles = append(Articles, article)
+		colVar := make([]interface{}, len(col))
+		for i := 0; i < len(col); i++ {
+			typeName := typeVal[i].DatabaseTypeName()
+			db.SetColVarType(&colVar, i, typeName)
+		}
+		
+		result := make(map[string]interface{})
+		rows.Scan(colVar...)
+		for i := 0; i < len(col); i++ {
+			typeName := typeVal[i].DatabaseTypeName()
+			db.SetResultValue(&result, col[i], colVar[i], typeName)
+		}
+
+		results = append(results, result)
 	}
 	
-	json.NewEncoder(w).Encode(Articles)
+	json.NewEncoder(w).Encode(results)
 	
 	fmt.Println("Endpoint Hit: returnSingleArticles")
 }

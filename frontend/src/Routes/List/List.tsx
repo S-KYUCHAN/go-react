@@ -8,9 +8,9 @@ import axios from "axios";
 // import "./List.scss";
 
 interface IList {
-  Id: string;
-  Title: string;
-  desc: string;
+  id: string;
+  title: string;
+  description: string;
   content: string;
 }
 
@@ -30,8 +30,8 @@ function ListView(props: IState) {
         return (
           <div key={`containerKey ${index}`} className="list-container">
             <div key={`listKey ${index}`} className='list' >
-              <Link to={`article/${repo.Id}`} className="list-title">{repo.Title}</Link>
-              <div key={`listDesc ${index}`} className="list-desc">{repo.desc}</div>
+              <Link to={`article/${repo.id}`} className="list-title">{repo.title}</Link>
+              <div key={`listDesc ${index}`} className="list-desc">{repo.description}</div>
               <div key={`listCont ${index}`} className="list-cont">{repo.content}</div>
             </div>
           </div>

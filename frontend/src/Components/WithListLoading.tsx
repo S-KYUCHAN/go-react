@@ -7,16 +7,16 @@ interface withLoadingProps {
 }
 
 interface List {
-  Id: string;
-  Title: string;
-  desc: string;
+  id: string;
+  title: string;
+  description: string;
   content: string;
 }
 
 interface Detail {
-  Id: string;
-  Title: string;
-  desc: string;
+  id: string;
+  title: string;
+  description: string;
   content: string;
 }
 
